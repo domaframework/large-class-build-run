@@ -31,6 +31,10 @@ application {
     mainClass.set("com.example.Main")
 }
 
+var daoPackagePath = "src/main/java/com/example/dao"
+var entityPackagePath = "src/main/java/com/example/entity"
+var sqlFileDirPath = "src/main/resources/META-INF/com/example/dao"
+
 tasks {
     test {
         useJUnitPlatform()
@@ -47,10 +51,6 @@ tasks {
     register("generateAll") {
         dependsOn("generateDAOs", "generateEntities", "generateSqlFiles")
     }
-
-    var daoPackagePath = "src/main/java/com/example/dao"
-    var entityPackagePath = "src/main/java/com/example/entity"
-    var sqlFileDirPath = "src/main/resources/META-INF/com/example/dao"
 
     register("generateDAOs") {
         dependsOn("generateEntities")
@@ -262,7 +262,7 @@ spotless {
     java {
         googleJavaFormat(libs.versions.googleJavaFormat.get())
         target("src/*/java/**/*.java")
-        targetExclude("**/generated/**")
+        targetExclude("**/generated/**", "$daoPackagePath/**", "$entityPackagePath/**", "$sqlFileDirPath/**")
     }
     kotlin {
         target("*.gradle.kts")
