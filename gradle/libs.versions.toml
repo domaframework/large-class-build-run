@@ -1,0 +1,21 @@
+[versions]
+junit = "5.10.0"
+doma = "3.9.1-SNAPSHOT"
+h2 = "2.3.232"
+slf4j = "2.0.17"
+logback = "1.5.18"
+googleJavaFormat = "1.27.0"
+
+[libraries]
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+doma-core = { module = "org.seasar.doma:doma-core", version.ref = "doma" }
+doma-processor = { module = "org.seasar.doma:doma-processor", version.ref = "doma" }
+doma-slf4j = { module = "org.seasar.doma:doma-slf4j", version.ref = "doma" }
+h2-database = { module = "com.h2database:h2", version.ref = "h2" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
+[plugins]
+doma-compile = { id = "org.domaframework.doma.compile", version = "4.0.0" }
+spotless = { id = "com.diffplug.spotless", version = "6.25.0" }

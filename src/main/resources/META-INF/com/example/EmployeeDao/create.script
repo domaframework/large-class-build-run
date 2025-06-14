@@ -1,0 +1,58 @@
+CREATE TABLE department (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255),
+    version INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE employee (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255),
+    age INTEGER,
+    birthday DATE,
+    profile_url VARCHAR(2048),
+    description1 VARCHAR(4000),
+    description2 VARCHAR(4000),
+    description3 VARCHAR(4000),
+    description4 VARCHAR(4000),
+    description5 VARCHAR(4000),
+    description6 VARCHAR(4000),
+    description7 VARCHAR(4000),
+    description8 VARCHAR(4000),
+    description9 VARCHAR(4000),
+    description10 VARCHAR(4000),
+    manager_id BIGINT,
+    department_id BIGINT,
+    version INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE employee ADD CONSTRAINT fk_employee_manager
+     FOREIGN KEY (manager_id) REFERENCES employee(id);
+
+ALTER TABLE employee ADD CONSTRAINT fk_employee_department
+     FOREIGN KEY (department_id) REFERENCES department(id);
+
+-- Department data
+INSERT INTO department (name, version) VALUES
+('Engineering', 0),
+('Sales', 0),
+('Human Resources', 0),
+('Administration', 0);
+
+-- Employee data
+INSERT INTO employee (name, age, birthday, profile_url, description1, description2, description3, description4, description5, description6, description7, description8, description9, description10, manager_id, department_id, version) VALUES
+-- Department heads (no manager_id)
+('John Smith', 45, '1979-04-15', 'https://example.com/profiles/john.smith', 'Engineering Department Head with 10 years experience', 'Expert in Java, Python, and Go programming', 'Strong team management skills', 'Promotes agile development practices', 'Strategic technology planning', 'Focus on team member development', 'Technical consultation with clients', 'Evaluation and adoption of new technologies', 'Project quality management', 'Cross-department coordination', NULL, 1, 0),
+('Sarah Johnson', 42, '1982-08-22', 'https://example.com/profiles/sarah.johnson', 'Sales Department Head for 8 years', 'Contributed to customer satisfaction improvement', 'Team sales target achievement rate 120%', 'Expert in new business development', 'Strong proposal and presentation skills', 'Building long-term client relationships', 'Sales strategy planning and execution', 'Supporting team skill development', 'Market analysis and competitive research', 'Sales budget management', NULL, 2, 0),
+
+-- Team leads
+('Michael Brown', 38, '1986-12-03', 'https://example.com/profiles/michael.brown', 'Frontend Development Team Leader', 'Expert in React, Vue.js, and TypeScript', 'Proficient in UI/UX design', 'Introduces modern development practices', 'Improves code review quality', 'Enhances team technical capabilities', 'Creates training programs for newcomers', 'Manages project progress', 'Technical validation of client requirements', 'Introduces development efficiency tools', 1, 1, 0),
+('Emily Davis', 35, '1989-06-18', 'https://example.com/profiles/emily.davis', 'Enterprise Sales Team Leader', 'Rich experience with large corporate clients', 'Top contract closure rate in department', 'Focuses on long-term customer relationships', 'Standardizes sales processes', 'Manages team goal progress', 'Mentors new sales representatives', 'Supports proposal creation', 'Analyzes customer needs', 'Develops competitive differentiation strategies', 2, 2, 0),
+
+-- Regular employees
+('David Wilson', 28, '1996-11-30', 'https://example.com/profiles/david.wilson', 'Backend Development Engineer', 'Uses Spring Boot and MyBatis', 'Skilled in database design', 'Rich experience in API development', 'Practices test-driven development', 'Performance optimization specialist', 'Implements security measures', 'Creates technical documentation', 'Improves code readability', 'Organizes technical study sessions', 3, 1, 0),
+('Jessica Miller', 26, '1998-03-12', 'https://example.com/profiles/jessica.miller', 'Frontend Engineer', 'Specializes in React and TypeScript', 'Handles responsive design implementation', 'Emphasizes accessibility standards', 'Conducts usability testing', 'Builds design systems', 'Measures and improves performance', 'Implements SEO optimization', 'Ensures cross-browser compatibility', 'Proposes UI/UX improvements', 3, 1, 0),
+('Robert Taylor', 30, '1994-09-07', 'https://example.com/profiles/robert.taylor', 'Mid-level Sales Representative', 'Handles existing customer follow-up', 'Sales target achievement rate 110%', 'Skilled in cross-selling and upselling', 'Conducts customer satisfaction surveys', 'Proposes sales material improvements', 'Hosts new product briefings', 'Creates competitive analysis reports', 'Maintains customer database', 'Proposes sales efficiency improvements', 4, 2, 0),
+('Amanda Anderson', 29, '1995-07-25', 'https://example.com/profiles/amanda.anderson', 'HR Planning Specialist', 'Plans and manages recruitment activities', 'Develops training programs', 'Proposes HR system improvements', 'Conducts employee satisfaction surveys', 'Streamlines labor management', 'Operates evaluation systems', 'Enhances employee benefits', 'Promotes work style reforms', 'Activates internal communication', NULL, 3, 0),
+('Christopher Garcia', 32, '1992-05-14', 'https://example.com/profiles/christopher.garcia', 'Administrative Coordinator', 'Manages office operations', 'Handles vendor relationships', 'Coordinates facility management', 'Processes administrative procedures', 'Manages office supply inventory', 'Supports company events', 'Maintains document management systems', 'Ensures compliance procedures', 'Streamlines administrative workflows', NULL, 4, 0);
