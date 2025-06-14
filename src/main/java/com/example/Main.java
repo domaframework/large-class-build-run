@@ -1,12 +1,11 @@
 package com.example;
 
+import java.util.Objects;
 import org.seasar.doma.jdbc.Naming;
 import org.seasar.doma.jdbc.SimpleConfig;
 import org.seasar.doma.slf4j.Slf4jJdbcLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Objects;
 
 public class Main {
 

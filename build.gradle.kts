@@ -96,7 +96,7 @@ tasks {
                            INNER JOIN department$i d
                                    ON e.department_id = d.id
                      WHERE e.id = /*id*/0 
-                """.trimIndent()
+                    """.trimIndent(),
                 )
             }
             println("Generated SQL files in src/main/resources/META-INF/com/example/dao/EmployeeXxxDao")
@@ -158,11 +158,11 @@ fun writeEmployeeAggregateStrategyCode(
         import com.example.entity.Department$i;
         import com.example.entity.Employee$i;
         
-        @AggregateStrategy(root = Employee${i}.class, tableAlias = "e")
+        @AggregateStrategy(root = Employee$i.class, tableAlias = "e")
         public interface Employee${i}AggregateStrategy {
         
           @AssociationLinker(propertyPath = "department", tableAlias = "d")
-          BiConsumer<Employee${i}, Department${i}> department =
+          BiConsumer<Employee$i, Department$i> department =
               (e, d) -> {
                 e.department = d;
                 d.employees.add(e);
