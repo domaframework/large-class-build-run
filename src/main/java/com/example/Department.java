@@ -1,6 +1,8 @@
 package com.example;
 
 import com.example.domain.Name;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.seasar.doma.Association;
 import org.seasar.doma.Entity;
@@ -18,5 +20,5 @@ public class Department {
 
   public Name name;
   @Version public Integer version;
-  @Association public List<Employee> employees;
+  @Association public List<Employee> employees = new ArrayList<>();
 }
