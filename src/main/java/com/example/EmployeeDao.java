@@ -18,7 +18,7 @@ public interface EmployeeDao {
   @Delete
   int delete(Employee entity);
 
-  @Select
+  @Select(aggregateStrategy = EmployeeAggregateStrategy.class)
   Employee selectById(Long id);
 
   @Script

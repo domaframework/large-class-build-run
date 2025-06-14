@@ -31,6 +31,10 @@ application {
     mainClass.set("com.example.Main")
 }
 
+var daoPackagePath = "src/main/java/com/example/dao"
+var entityPackagePath = "src/main/java/com/example/entity"
+var sqlFileDirPath = "src/main/resources/META-INF/com/example/dao"
+
 tasks {
     test {
         useJUnitPlatform()
@@ -48,10 +52,6 @@ tasks {
         dependsOn("generateDAOs", "generateEntities", "generateSqlFiles")
     }
 
-    var daoPackagePath = "src/main/java/com/example/dao"
-    var entityPackagePath = "src/main/java/com/example/entity"
-    var sqlFileDirPath = "src/main/resources/META-INF/com/example/dao"
-
     register("generateDAOs") {
         dependsOn("generateEntities")
         doLast {
@@ -61,6 +61,8 @@ tasks {
             (1..generationSize).forEach { i ->
                 val employeeDaoFile = File(sourceDir, "Employee${i}Dao.java")
                 writeEmployeeDaoCode(employeeDaoFile, i)
+                val employeeAggregateStrategyFile = File(sourceDir, "Employee${i}AggregateStrategy.java")
+                writeEmployeeAggregateStrategyCode(employeeAggregateStrategyFile, i)
             }
             println("Generated DAO files in src/main/java/com/example/dao")
         }
@@ -87,7 +89,15 @@ tasks {
                 dir.mkdirs()
 
                 val sqlFile = File(dir, "selectById.sql")
-                sqlFile.writeText("select /*%expand*/* from employee$i where id = /*id*/0\n")
+                sqlFile.writeText(
+                    """
+                    SELECT /*%expand*/*
+                      FROM employee$i e
+                           INNER JOIN department$i d
+                                   ON e.department_id = d.id
+                     WHERE e.id = /*id*/0 
+                    """.trimIndent(),
+                )
             }
             println("Generated SQL files in src/main/resources/META-INF/com/example/dao/EmployeeXxxDao")
         }
@@ -125,8 +135,38 @@ fun writeEmployeeDaoCode(
             @Delete
             int delete(Employee$i entity);
             
-            @Select
+            @Select(aggregateStrategy = Employee${i}AggregateStrategy.class)
             Employee$i selectById(Long id);
+        }
+        """.trimIndent(),
+    )
+}
+
+fun writeEmployeeAggregateStrategyCode(
+    file: File,
+    i: Int,
+) {
+    file.writeText(
+        """
+        package com.example.dao;
+        
+        import org.seasar.doma.AggregateStrategy;
+        import org.seasar.doma.AssociationLinker;
+        
+        import java.util.function.BiConsumer;
+        
+        import com.example.entity.Department$i;
+        import com.example.entity.Employee$i;
+        
+        @AggregateStrategy(root = Employee$i.class, tableAlias = "e")
+        public interface Employee${i}AggregateStrategy {
+        
+          @AssociationLinker(propertyPath = "department", tableAlias = "d")
+          BiConsumer<Employee$i, Department$i> department =
+              (e, d) -> {
+                e.department = d;
+                d.employees.add(e);
+              };
         }
         """.trimIndent(),
     )
@@ -191,6 +231,7 @@ fun writeDepartmentCode(
         """
         package com.example.entity;
         
+        import java.util.ArrayList;
         import java.util.List;
         
         import org.seasar.doma.Association;
@@ -211,7 +252,7 @@ fun writeDepartmentCode(
             @Version
             public Integer version;
             @Association
-            public List<Employee$i> employees;
+            public List<Employee$i> employees = new ArrayList<>();
         }
         """.trimIndent(),
     )
@@ -221,7 +262,7 @@ spotless {
     java {
         googleJavaFormat(libs.versions.googleJavaFormat.get())
         target("src/*/java/**/*.java")
-        targetExclude("**/generated/**")
+        targetExclude("**/generated/**", "$daoPackagePath/**", "$entityPackagePath/**", "$sqlFileDirPath/**")
     }
     kotlin {
         target("*.gradle.kts")
