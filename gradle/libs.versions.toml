@@ -1,6 +1,6 @@
 [versions]
 junit = "5.10.0"
-doma = "3.9.1-SNAPSHOT"
+doma = "3.9.0"
 h2 = "2.3.232"
 slf4j = "2.0.17"
 logback = "1.5.18"
