@@ -81,6 +81,8 @@ tasks {
                 writeEmployeeDaoCode(employeeDaoFile, i)
                 val employeeAggregateStrategyFile = File(sourceDir, "Employee${i}AggregateStrategy.java")
                 writeEmployeeAggregateStrategyCode(employeeAggregateStrategyFile, i)
+                val employeeConditionFile = File(sourceDir, "Employee${i}Condition.java")
+                writeEmployeeConditionCode(employeeConditionFile, i)
             }
             println("Generated DAO files in src/main/java/com/example/dao")
         }
@@ -119,8 +121,10 @@ tasks {
             (1..generationSize).forEach { i ->
                 val dir = file("$sqlFileDirPath/Employee${i}Dao")
                 dir.mkdirs()
-                val sqlFile = File(dir, "selectById.sql")
-                writeSelectByIdSqlFile(sqlFile, i)
+                val selectByIdSqlFile = File(dir, "selectById.sql")
+                writeSelectByIdSqlFile(selectByIdSqlFile, i)
+                val selectByConditionSqlFile = File(dir, "selectByCondition.sql")
+                writeSelectByConditionSqlFile(selectByConditionSqlFile, i)
                 val createScriptFile = File(dir, "create.script")
                 writeCreateScriptFile(createScriptFile, i)
                 val dropScriptFile = File(dir, "drop.script")
@@ -142,6 +146,8 @@ fun writeEmployeeDaoCode(
     file.writeText(
         """
         package com.example.dao;
+        
+        import java.util.List;
         
         import org.seasar.doma.Dao;
         import org.seasar.doma.Insert;
@@ -165,6 +171,9 @@ fun writeEmployeeDaoCode(
             
             @Select(aggregateStrategy = Employee${i}AggregateStrategy.class)
             Employee$i selectById(Long id);
+
+            @Select
+            List<Employee$i> selectByCondition(Employee${i}Condition condition);
 
             @Script
             void create();
@@ -204,6 +213,25 @@ fun writeEmployeeAggregateStrategyCode(
                 e.department = d;
                 d.employees.add(e);
               };
+        }
+        """.trimIndent(),
+    )
+}
+
+fun writeEmployeeConditionCode(
+    file: File,
+    i: Int,
+) {
+    file.writeText(
+        """
+        package com.example.dao;
+
+        import java.util.Objects;
+
+        public record Employee${i}Condition(String namePattern, int age) {
+          public Employee${i}Condition {
+            Objects.requireNonNull(namePattern);
+          }
         }
         """.trimIndent(),
     )
@@ -308,6 +336,20 @@ fun writeSelectByIdSqlFile(
                INNER JOIN department$i d
                        ON e.department_id = d.id
          WHERE e.id = /*id*/0 
+        """.trimIndent(),
+    )
+}
+
+fun writeSelectByConditionSqlFile(
+    file: File,
+    i: Int,
+) {
+    file.writeText(
+        """
+        SELECT /*%expand*/*
+          FROM employee$i e
+         WHERE e.age > /* condition.age */0
+           AND e.name LIKE /* condition.namePattern */'test' 
         """.trimIndent(),
     )
 }
@@ -462,6 +504,13 @@ fun writeEmployeeDaoTestCode(
             assertEquals("Sarah Johnson", employee2.name.value());
             assertEquals("Engineering", employee2.department.name.value());
             assertEquals(employee.id, employee2.manager.id);
+          }
+
+          @Test
+          void selectByCondition() {
+            var condition = new Employee${i}Condition("%J%", 20);
+            var employees = employeeDao.selectByCondition(condition);
+            assertEquals(2, employees.size());
           }
         }
         """.trimIndent(),

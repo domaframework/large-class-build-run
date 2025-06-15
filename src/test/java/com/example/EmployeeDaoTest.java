@@ -69,4 +69,11 @@ class EmployeeDaoTest {
     assertEquals("Engineering", employee2.department.name.value());
     assertEquals(employee.id, employee2.manager.id);
   }
+
+  @Test
+  void selectByCondition() {
+    var condition = new EmployeeCondition("%J%", 20);
+    var employees = employeeDao.selectByCondition(condition);
+    assertEquals(2, employees.size());
+  }
 }

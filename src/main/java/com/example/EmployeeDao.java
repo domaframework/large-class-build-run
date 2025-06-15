@@ -1,5 +1,6 @@
 package com.example;
 
+import java.util.List;
 import org.seasar.doma.Dao;
 import org.seasar.doma.Delete;
 import org.seasar.doma.Insert;
@@ -20,6 +21,9 @@ public interface EmployeeDao {
 
   @Select(aggregateStrategy = EmployeeAggregateStrategy.class)
   Employee selectById(Long id);
+
+  @Select
+  List<Employee> selectByCondition(EmployeeCondition condition);
 
   @Script
   void create();
