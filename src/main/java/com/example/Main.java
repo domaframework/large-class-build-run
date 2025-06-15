@@ -13,7 +13,7 @@ public class Main {
 
   public static void main(String[] args) {
     var config =
-        SimpleConfig.builder("jdbc:h2:mem:tutorial;DB_CLOSE_DELAY=-1")
+        SimpleConfig.builder("jdbc:h2:mem:main;DB_CLOSE_DELAY=-1")
             .naming(Naming.SNAKE_LOWER_CASE)
             .jdbcLogger(new Slf4jJdbcLogger())
             .build();

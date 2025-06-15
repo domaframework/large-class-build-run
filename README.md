@@ -5,6 +5,7 @@ A Doma framework test project for benchmarking build performance with large numb
 ## Overview
 
 This project is designed to test the build performance of Doma's annotation processor by automatically generating 200+ DAO interfaces and entity classes.
+It includes comprehensive test suites for all generated DAOs to verify the functionality of batch operations and aggregate strategies.
 
 ## Requirements
 
@@ -57,6 +58,9 @@ Commands to generate large numbers of test classes:
 # Generate only SQL files
 ./gradlew generateSqlFiles
 
+# Generate test classes for all DAOs
+./gradlew generateTests
+
 # Remove all generated files
 ./gradlew removeGeneratedFiles
 ```
@@ -89,11 +93,21 @@ src/
 │   └── resources/
 │       └── META-INF/com/example/dao/  # SQL files
 └── test/
+    └── java/
+        └── com/example/
+            └── dao/          # Generated DAO test classes
 ```
+
+## Features
+
+- **Batch Operations**: Support for batch insert, update, and delete operations
+- **Aggregate Strategy**: Efficient loading of entity associations (Employee-Department relationships)
+- **Performance Testing**: Designed to test annotation processor performance with 200+ entities
+- **Comprehensive Test Suite**: Automated test generation for all DAOs
 
 ## Technology Stack
 
-- **Doma 2**: Compile-time ORM framework
+- **Doma 3.9.0**: Compile-time ORM framework with aggregate strategy support
 - **H2 Database**: In-memory database for testing
 - **JUnit 5**: Testing framework
 - **SLF4J/Logback**: Logging
