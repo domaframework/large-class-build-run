@@ -194,6 +194,9 @@ fun writeEmployeeAggregateStrategyCode(
         
         @AggregateStrategy(root = Employee$i.class, tableAlias = "e")
         public interface Employee${i}AggregateStrategy {
+
+          @AssociationLinker(propertyPath = "manager", tableAlias = "m")
+          BiConsumer<Employee$i, Employee$i> manager = (e, m) -> e.manager = m;
         
           @AssociationLinker(propertyPath = "department", tableAlias = "d")
           BiConsumer<Employee$i, Department$i> department =
@@ -300,6 +303,8 @@ fun writeSelectByIdSqlFile(
         """
         SELECT /*%expand*/*
           FROM employee$i e
+               LEFT JOIN employee$i m
+                      ON e.manager_id = m.id
                INNER JOIN department$i d
                        ON e.department_id = d.id
          WHERE e.id = /*id*/0 
@@ -445,8 +450,18 @@ fun writeEmployeeDaoTestCode(
             assertNotNull(employee);
             assertNotNull(employee.name);
             assertNotNull(employee.department);
+            assertNull(employee.manager);
             assertEquals("John Smith", employee.name.value());
             assertEquals("Engineering", employee.department.name.value());
+        
+            var employee2 = employeeDao.selectById(2L);
+            assertNotNull(employee2);
+            assertNotNull(employee2.name);
+            assertNotNull(employee2.department);
+            assertNotNull(employee2.manager);
+            assertEquals("Sarah Johnson", employee2.name.value());
+            assertEquals("Engineering", employee2.department.name.value());
+            assertEquals(employee.id, employee2.manager.id);
           }
         }
         """.trimIndent(),

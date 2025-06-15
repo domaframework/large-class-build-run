@@ -7,6 +7,9 @@ import org.seasar.doma.AssociationLinker;
 @AggregateStrategy(root = Employee.class, tableAlias = "e")
 public interface EmployeeAggregateStrategy {
 
+  @AssociationLinker(propertyPath = "manager", tableAlias = "m")
+  BiConsumer<Employee, Employee> manager = (e, m) -> e.manager = m;
+
   @AssociationLinker(propertyPath = "department", tableAlias = "d")
   BiConsumer<Employee, Department> department =
       (e, d) -> {

@@ -56,7 +56,17 @@ class EmployeeDaoTest {
     assertNotNull(employee);
     assertNotNull(employee.name);
     assertNotNull(employee.department);
+    assertNull(employee.manager);
     assertEquals("John Smith", employee.name.value());
     assertEquals("Engineering", employee.department.name.value());
+
+    var employee2 = employeeDao.selectById(2L);
+    assertNotNull(employee2);
+    assertNotNull(employee2.name);
+    assertNotNull(employee2.department);
+    assertNotNull(employee2.manager);
+    assertEquals("Sarah Johnson", employee2.name.value());
+    assertEquals("Engineering", employee2.department.name.value());
+    assertEquals(employee.id, employee2.manager.id);
   }
 }
