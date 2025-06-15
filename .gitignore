@@ -42,3 +42,4 @@ bin/
 /src/main/java/com/example/dao/
 /src/main/java/com/example/entity/
 /src/main/resources/META-INF/com/example/dao/
+/src/test/java/com/example/dao/

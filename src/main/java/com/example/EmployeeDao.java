@@ -23,4 +23,7 @@ public interface EmployeeDao {
 
   @Script
   void create();
+
+  @Script
+  void drop();
 }
