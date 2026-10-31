@@ -17,5 +17,5 @@ slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 [plugins]
-doma-compile = { id = "org.domaframework.doma.compile", version = "4.0.0" }
+doma-compile = { id = "org.domaframework.doma.compile", version = "4.0.4" }
 spotless = { id = "com.diffplug.spotless", version = "6.25.0" }
